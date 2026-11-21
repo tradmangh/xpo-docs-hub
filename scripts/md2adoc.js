@@ -3,6 +3,21 @@ const fs = require('node:fs')
 const path = require('node:path')
 const { execFileSync } = require('node:child_process')
 
+function runKramdoc (root, outPath, mdPath) {
+  const args = ['--format=GFM', '--wrap=ventilate', '-o', outPath, mdPath]
+  try {
+    execFileSync('kramdoc', args, { stdio: 'inherit' })
+  } catch (err) {
+    if (err.code !== 'ENOENT') throw err
+    const relOut = path.relative(root, outPath).replace(/\\/g, '/')
+    const relMd = path.relative(root, mdPath).replace(/\\/g, '/')
+    execFileSync('podman', [
+      'run', '--rm', '-v', `${root}:/work`, 'xpo-kramdoc:latest',
+      '--format=GFM', '--wrap=ventilate', '-o', `/work/${relOut}`, `/work/${relMd}`
+    ], { stdio: 'inherit' })
+  }
+}
+
 const MODULES = { ADRs: 'adr' }
 const modOf = (f) => MODULES[f] || f.toLowerCase()
 
@@ -35,7 +50,7 @@ function convertDir (docsRoot) {
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
       const full = path.join(dir, entry.name)
       if (entry.isDirectory()) {
-        if (entry.name === 'modules' || entry.name === 'plans') continue
+        if (['modules', 'plans', 'session_history', 'archive'].includes(entry.name)) continue
         walk(full)
       } else if (entry.name.endsWith('.md')) {
         mdFiles.push(full)
@@ -53,7 +68,7 @@ function convertDir (docsRoot) {
     const pageRel = (parts.length > 1 ? parts.slice(1).join('/') : parts[0]).replace(/\.md$/, '.adoc')
     const outPath = path.join(root, 'modules', mod, 'pages', pageRel)
     fs.mkdirSync(path.dirname(outPath), { recursive: true })
-    execFileSync('kramdoc', ['--format=GFM', '--wrap=ventilate', '-o', outPath, mdPath], { stdio: 'inherit' })
+    runKramdoc(root, outPath, mdPath)
     let adoc = fs.readFileSync(outPath, 'utf8')
     adoc = rewriteLinks(adoc, mod)
     adoc = ensureVisibility(adoc, 'internal')
