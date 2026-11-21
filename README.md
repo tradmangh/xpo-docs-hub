@@ -31,9 +31,8 @@ CONTRACT=1 COMENTARIO_URL=http://localhost:18080 BOT_EMAIL=... BOT_PASSWORD=... 
 ## Coolify Deployment (VPS1)
 
 1. **GitHub Secret (`GH_TOKEN`)**: Fine-grained read-only PAT (`xpo-docs-reader`, Contents: Read) stored as a Coolify build secret.
-2. **docs-public**: Dockerfile build (`SITE=public`), domain `docs.<domain>`.
-3. **docs-internal**: Dockerfile build (`SITE=internal`), domain `docs-int.<domain>` with Traefik WireGuard IP allowlist (`traefik.http.middlewares.wg-only.ipallowlist.sourcerange=<wg-subnet>`).
-4. **comentario-db**: Dedicated PostgreSQL 17 container with persistent volume and nightly `pg_dump` backup (14-day retention).
-5. **comentario**: `registry.gitlab.com/comentario/comentario:v3.19.0`, domain `comments.<domain>`, internal hostname `comentario`, webhooks enabled with `--wh.allow-insecure` and `--wh.allow-private-targets`, Authentik OIDC (`oidc:authentik`), local **Docs Bot** moderator user, webhooks pointing to `http://comentario-bridge:8080/comentario`.
-6. **comentario-bridge**: `bridge/Dockerfile` (context = repo root), internal hostname `comentario-bridge`, Traefik route `comments.<domain>` `PathPrefix(/bridge/status)` stripping `/bridge` to `/status`.
-7. **Split DNS**: Technitium internal zone entry for `docs-int.<domain>`.
+2. **docs**: Dockerfile build (`SITE=internal`), domain `docs.xpo.at` (internal-only) with Traefik WireGuard IP allowlist (`traefik.http.middlewares.wg-only.ipallowlist.sourcerange=<wg-subnet>`). *(Optional public build `SITE=public` is available via `antora-playbook.public.yml` if ever needed.)*
+3. **comentario-db**: Dedicated PostgreSQL 17 container with persistent volume and nightly `pg_dump` backup (14-day retention).
+4. **comentario**: `registry.gitlab.com/comentario/comentario:v3.19.0`, domain `comments.xpo.at`, internal hostname `comentario`, DB credentials from `comentario-db`, webhooks enabled with `--wh.allow-insecure` and `--wh.allow-private-targets`, Authentik OIDC (`oidc:authentik`), domain `docs.xpo.at`, local **Docs Bot** moderator user, webhook pointing to `http://comentario-bridge:8080/comentario`.
+5. **comentario-bridge**: `bridge/Dockerfile` (context = repo root), internal hostname `comentario-bridge`, Traefik route `comments.xpo.at` `PathPrefix(/bridge/status)` stripping `/bridge` to `/status`.
+6. **Split DNS**: Technitium internal zone entry for `docs.xpo.at` (and `comments.xpo.at` if internal-only, or public DNS if GitHub status write-back / external access is used).

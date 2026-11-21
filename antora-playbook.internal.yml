@@ -1,6 +1,6 @@
 site:
-  title: XPO Docs (internal)
-  url: https://docs-int.xpo.at
+  title: XPO Docs
+  url: https://docs.xpo.at
   start_page: xpo::index.adoc
   keys:
     comentario_url: https://comments.xpo.at
