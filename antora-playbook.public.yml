@@ -1,9 +1,9 @@
 site:
   title: XPO Docs
-  url: https://docs.<domain>
+  url: https://docs.xpo.at
   start_page: windy-mcp::index.adoc
   keys:
-    comentario_url: https://comments.<domain>
+    comentario_url: https://comments.xpo.at
 git:
   credentials: { path: ./.git-credentials }
 content:

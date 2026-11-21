@@ -1,9 +1,9 @@
 site:
   title: XPO Docs (internal)
-  url: https://docs-int.<domain>
+  url: https://docs-int.xpo.at
   start_page: xpo::index.adoc
   keys:
-    comentario_url: https://comments.<domain>
+    comentario_url: https://comments.xpo.at
 git:
   # Coolify injects GIT_CREDENTIALS=https://x-access-token:<token>@github.com (read-only fine-grained token).
   credentials: { path: ./.git-credentials }
