@@ -1,0 +1,9 @@
+{{!-- ui/partials/footer-content.hbs --}}
+{{#if page.component}}
+<section class="doc-feedback">
+  <h2>Feedback</h2>
+  <script defer src="{{site.keys.comentario_url}}/comentario.js"></script>
+  <comentario-comments theme="auto"></comentario-comments>
+</section>
+{{/if}}
+<footer class="footer"><p>XPO Docs Hub</p></footer>

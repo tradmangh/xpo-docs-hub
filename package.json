@@ -1,0 +1,16 @@
+{
+  "name": "xpo-docs-hub",
+  "private": true,
+  "type": "commonjs",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "test": "node --test",
+    "build:internal": "antora generate --fetch antora-playbook.internal.yml",
+    "build:public": "antora generate --fetch antora-playbook.public.yml && node scripts/leak-check.js build/public"
+  },
+  "dependencies": {
+    "@antora/cli": "3.1.10",
+    "@antora/site-generator": "3.1.10",
+    "js-yaml": "4.1.0"
+  }
+}

@@ -1,0 +1,29 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: comentario
+      POSTGRES_USER: comentario
+      POSTGRES_PASSWORD: comentario-test-password
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U comentario"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+
+  comentario:
+    image: registry.gitlab.com/comentario/comentario:v3.19.0
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "18080:8080"
+    environment:
+      BASE_URL: http://localhost:18080
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: comentario
+      POSTGRES_USERNAME: comentario
+      POSTGRES_PASSWORD: comentario-test-password
+      COMENTARIO_WH_ALLOW_INSECURE: "true"
+      COMENTARIO_WH_ALLOW_PRIVATE_TARGETS: "true"

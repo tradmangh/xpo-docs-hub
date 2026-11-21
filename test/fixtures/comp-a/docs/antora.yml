@@ -1,0 +1,4 @@
+name: comp-a
+title: Component A
+version: ~
+nav: [modules/ROOT/nav.adoc]

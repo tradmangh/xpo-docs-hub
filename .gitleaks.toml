@@ -1,0 +1,71 @@
+# gitleaks config for xpo-docs-hub (mirrored from at-xpo-x / xpo-ops).
+
+title = "xpo-docs-hub secret gate"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "xpo-paperclip-board-token"
+description = "Paperclip Board API token"
+regex = '''pcp_board_[A-Za-z0-9_]{8,}'''
+tags = ["xpo", "paperclip"]
+
+[[rules]]
+id = "xpo-basic-auth-literal"
+description = "HTTP Basic credential committed as a literal (SecOps S1)"
+regex = '''(?i)\bbasic\s+([A-Za-z0-9+/]{16,}={0,2})'''
+secretGroup = 1
+tags = ["xpo", "basic-auth", "S1"]
+
+[[rules]]
+id = "xpo-openobserve-auth-header"
+description = "OpenObserve auth header assigned a literal value"
+regex = '''(?i)\bZO_AUTH_HEADER\s*[:=]\s*["']?(\S{12,})'''
+secretGroup = 1
+tags = ["xpo", "openobserve", "S1"]
+
+[[rules]]
+id = "xpo-url-embedded-credential"
+description = "Credential embedded in a URL — never put a token in a remote URL (SecOps S2)"
+regex = '''https?://([^/\s@"'<>]{8,})@'''
+secretGroup = 1
+tags = ["xpo", "git-remote", "S2"]
+
+[[rules]]
+id = "xpo-wireguard-private-key"
+description = "WireGuard private key (AGENTS.md: do not commit actual keys)"
+regex = '''(?im)^\s*PrivateKey\s*=\s*([A-Za-z0-9+/]{42,}=)\s*$'''
+secretGroup = 1
+tags = ["xpo", "wireguard"]
+
+[[rules]]
+id = "xpo-sub-bridge-bearer-key"
+description = "Bifrost sub-bridge bearer key committed as a literal (XPO-178/XPO-179)"
+regex = '''(sk-xpo-[a-z-]+-\d{4})'''
+secretGroup = 1
+tags = ["xpo", "bifrost", "sub-bridge", "XPO-178"]
+
+[[rules]]
+id = "xpo-sub-bridge-admin-secret"
+description = "Bifrost sub-bridge admin secret committed as a literal (XPO-178/XPO-179)"
+regex = '''(xpo-sub-bridge-admin-\d{4})'''
+secretGroup = 1
+tags = ["xpo", "bifrost", "sub-bridge", "XPO-178"]
+
+[allowlist]
+description = "Documented placeholders only — keep this narrow"
+regexTarget = "match"
+regexes = [
+  '''(?i)(redact|REDACTED|changeme|change_me|placeholder|example|your[_-]?(token|key|secret|password)|xxxx|\*\*\*\*)''',
+  '''(?i)basic\s+<''',
+  '''(?i)(abc123|deadbeef|foo_?bar)''',
+  '''\$\{?[A-Z_][A-Z0-9_]*\}?''',
+]
+paths = [
+  '''scripts/secret_scan\.py''',
+  '''\.gitleaks\.toml''',
+  '''\.githooks/pre-commit''',
+  '''(^|/)__pycache__/''',
+  '''\.pyc$''',
+]

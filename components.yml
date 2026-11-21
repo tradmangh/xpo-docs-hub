@@ -1,0 +1,9 @@
+# Single source of truth: component name -> owning repo, visibility, feedback mode.
+# feedback: per branch (main/dev); missing = triage. `direct` is opt-in (design §4.2).
+components:
+  xpo:          { repo: tradmangh/at-xpo-x,               private: true, feedback: { main: triage, dev: direct } }
+  ops:          { repo: tradmangh/xpo-ops,                private: true }
+  omnion:       { repo: tradmangh/omnion-swe,             private: true }
+  windy-client: { repo: tradmangh/windy-api-client,       private: false }
+  windy-mcp:    { repo: tradmangh/at-xpo-windy-mcpserver, private: false }
+fallbackRepo: tradmangh/xpo-docs-hub

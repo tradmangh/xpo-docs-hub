@@ -1,0 +1,26 @@
+site:
+  title: XPO Docs
+  url: https://docs.<domain>
+  start_page: windy-mcp::index.adoc
+  keys:
+    comentario_url: https://comments.<domain>
+git:
+  credentials: { path: ./.git-credentials }
+content:
+  sources:
+    - { url: https://github.com/tradmangh/at-xpo-x.git,               start_path: docs, branches: main }
+    - { url: https://github.com/tradmangh/xpo-ops.git,                start_path: docs, branches: main }
+    - { url: https://github.com/tradmangh/omnion-swe.git,             start_path: docs, branches: main }
+    - { url: https://github.com/tradmangh/windy-api-client.git,       start_path: docs, branches: main }
+    - { url: https://github.com/tradmangh/at-xpo-windy-mcpserver.git, start_path: docs, branches: main }
+antora:
+  extensions: [./lib/visibility-filter.js]
+ui:
+  bundle:
+    url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/HEAD/raw/build/ui-bundle.zip?job=bundle-stable
+    snapshot: true
+  supplemental_files: ./ui
+output: { dir: ./build/public }
+runtime:
+  fetch: true
+  log: { failure_level: fatal } # dangling xrefs to filtered pages are expected; the internal build enforces xref correctness

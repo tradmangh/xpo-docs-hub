@@ -1,0 +1,4 @@
+= Public Index
+:page-visibility: public
+
+See xref:secret.adoc[the secret page].
