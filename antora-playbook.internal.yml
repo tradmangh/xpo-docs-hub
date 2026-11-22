@@ -22,4 +22,4 @@ ui:
 output: { dir: ./build/internal }
 runtime:
   fetch: true
-  log: { failure_level: fatal } # temporary while legacy converted xrefs are cleaned up
+  log: { failure_level: warn }
