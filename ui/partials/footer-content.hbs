@@ -2,7 +2,7 @@
 {{#if page.component}}
 <section class="doc-feedback">
   <h2>Feedback</h2>
-  <script defer src="{{site.keys.comentario_url}}/comentario.js"></script>
+  <script defer src="{{#if site.keys.comentarioUrl}}{{site.keys.comentarioUrl}}{{else}}{{site.keys.comentario_url}}{{/if}}/comentario.js"></script>
   <comentario-comments theme="auto"></comentario-comments>
 </section>
 {{/if}}

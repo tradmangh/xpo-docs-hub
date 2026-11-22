@@ -11,7 +11,7 @@ test('head-meta emits page-visibility meta', () => {
 
 test('footer partial embeds Comentario', () => {
   const src = fs.readFileSync('ui/partials/footer-content.hbs', 'utf8');
-  assert.match(src, /\{\{site\.keys\.comentario_url\}\}\/comentario\.js/);
+  assert.match(src, /site\.keys\.(comentarioUrl|comentario_url).*\/comentario\.js/);
   assert.match(src, /<comentario-comments/);
   assert.doesNotMatch(src, /giscus|relay/);
 });
