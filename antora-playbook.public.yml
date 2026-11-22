@@ -15,6 +15,8 @@ content:
     - { url: https://github.com/tradmangh/at-xpo-windy-mcpserver.git, start_path: docs, branches: main }
 antora:
   extensions: [./lib/visibility-filter.js]
+asciidoc:
+  extensions: [./lib/mermaid-block.js]
 ui:
   bundle:
     url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/HEAD/raw/build/ui-bundle.zip?job=bundle-stable

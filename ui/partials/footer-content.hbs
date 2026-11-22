@@ -6,4 +6,10 @@
   <comentario-comments theme="auto"></comentario-comments>
 </section>
 {{/if}}
+<script src="{{{uiRootPath}}}/js/mermaid.min.js"></script>
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ startOnLoad: true, theme: 'default', securityLevel: 'loose' });
+  }
+</script>
 <footer class="footer"><p>XPO Docs Hub</p></footer>

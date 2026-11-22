@@ -7,6 +7,7 @@ WORKDIR /hub
 COPY package*.json ./
 RUN npm ci
 COPY . .
+RUN mkdir -p ui/js && cp node_modules/mermaid/dist/mermaid.min.js ui/js/mermaid.min.js
 RUN --mount=type=secret,id=gh_token sh scripts/write-credentials.sh && npm run build:${SITE} && rm -f .git-credentials
 
 FROM nginx:1.27-alpine
