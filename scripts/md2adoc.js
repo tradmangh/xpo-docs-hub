@@ -38,6 +38,48 @@ function ensureVisibility (adoc, visibility = 'internal') {
   return lines.join('\n')
 }
 
+function buildNavTree (pages) {
+  const root = { children: new Map(), pages: [] }
+  for (const p of pages) {
+    const parts = p.pageRel.split('/')
+    let node = root
+    for (let i = 0; i < parts.length - 1; i++) {
+      const dir = parts[i]
+      if (!node.children.has(dir)) node.children.set(dir, { children: new Map(), pages: [] })
+      node = node.children.get(dir)
+    }
+    node.pages.push(p)
+  }
+
+  function formatLabel (dir) {
+    return dir.replace(/[-_]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
+  }
+
+  function render (node, depth = 1) {
+    const lines = []
+    const stars = '*'.repeat(depth)
+    const sortedPages = [...node.pages].sort((a, b) => a.pageRel.localeCompare(b.pageRel))
+    for (const p of sortedPages) {
+      lines.push(`${stars} xref:${p.pageRel}[${p.title}]`)
+    }
+    const sortedDirs = [...node.children.keys()].sort()
+    for (const dir of sortedDirs) {
+      const child = node.children.get(dir)
+      const readmeIdx = child.pages.findIndex((p) => /^(index|README)\.adoc$/i.test(path.basename(p.pageRel)))
+      if (readmeIdx !== -1) {
+        const [hub] = child.pages.splice(readmeIdx, 1)
+        lines.push(`${stars} xref:${hub.pageRel}[${formatLabel(dir)}]`)
+      } else {
+        lines.push(`${stars} ${formatLabel(dir)}`)
+      }
+      lines.push(...render(child, depth + 1))
+    }
+    return lines
+  }
+
+  return render(root, 1).join('\n') + '\n'
+}
+
 function extractTitle (adoc, fallback) {
   const m = adoc.match(/^=\s+(.+)$/m)
   return m ? m[1].trim() : fallback
@@ -79,10 +121,8 @@ function convertDir (docsRoot) {
   }
 
   for (const [mod, pages] of navByModule.entries()) {
-    pages.sort((a, b) => a.pageRel.localeCompare(b.pageRel))
     const navPath = path.join(root, 'modules', mod, 'nav.adoc')
-    const navContent = pages.map((p) => `* xref:${p.pageRel}[${p.title}]`).join('\n') + '\n'
-    fs.writeFileSync(navPath, navContent)
+    fs.writeFileSync(navPath, buildNavTree(pages))
   }
 }
 
@@ -91,4 +131,4 @@ if (require.main === module) {
   convertDir(target)
 }
 
-module.exports = { rewriteLinks, modOf, ensureVisibility, extractTitle, convertDir }
+module.exports = { rewriteLinks, modOf, ensureVisibility, extractTitle, buildNavTree, convertDir }
