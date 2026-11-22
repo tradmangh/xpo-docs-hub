@@ -9,9 +9,9 @@ git:
   credentials: { path: ./.git-credentials }
 content:
   sources:
-    - { url: https://github.com/tradmangh/at-xpo-x.git,               start_path: docs, branches: [main, dev] }
-    - { url: https://github.com/tradmangh/xpo-ops.git,                start_path: docs, branches: [main, dev] }
-    - { url: https://github.com/tradmangh/omnion-swe.git,             start_path: docs, branches: [main, dev] }
+    - { url: https://github.com/tradmangh/at-xpo-x.git,               start_path: docs, branches: main }
+    - { url: https://github.com/tradmangh/xpo-ops.git,                start_path: docs, branches: main }
+    - { url: https://github.com/tradmangh/omnion-swe.git,             start_path: docs, branches: main }
     - { url: https://github.com/tradmangh/windy-api-client.git,       start_path: docs, branches: main }
     - { url: https://github.com/tradmangh/at-xpo-windy-mcpserver.git, start_path: docs, branches: main }
 ui:
