@@ -1,6 +1,7 @@
 # Dockerfile — build arg SITE=internal|public
 FROM node:22-alpine AS build
 ARG SITE=public
+ARG GH_TOKEN
 RUN apk add --no-cache git
 WORKDIR /hub
 COPY package*.json ./
